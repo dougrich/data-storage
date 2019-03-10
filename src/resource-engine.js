@@ -1,17 +1,7 @@
 class ResourceEngine {
   constructor (
-    parsers = {
-      '.yml': contents => require('js-yaml').safeLoad(contents),
-      '.toml': contents => require('toml').parse(contents),
-      '.json5': contents => require('json5').parse(contents),
-      '.json': contents => JSON.parse(contents)
-    },
-    protocols = {
-      'res:': async uri => {
-        const filename = require('path').resolve(__dirname, '../examples/simple', '.' + uri.pathname)
-        return require('fs-extra').readFile(filename, { encoding: 'utf8' })
-      }
-    },
+    parsers,
+    protocols,
     key = require('./urikey'),
     ResourceWrapper = require('./resource-wrapper'),
     path = require('path'),

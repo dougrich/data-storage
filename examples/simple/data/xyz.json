@@ -1,0 +1,5 @@
+{
+  "name": {
+    "$ref": "file:///def.toml#/details/name"
+  }
+}

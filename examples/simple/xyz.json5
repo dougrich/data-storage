@@ -1,5 +1,0 @@
-{
-  name: {
-    "$ref": "res:///xyz.json#/name"
-  }
-}

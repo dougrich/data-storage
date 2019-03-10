@@ -1,5 +1,0 @@
-{
-  "name": {
-    "$ref": "res:///def.toml#/details/name"
-  }
-}
