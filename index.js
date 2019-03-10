@@ -92,26 +92,26 @@ class ResourceEngine {
     }
     this.protocols = {
       'res:': async uri => {
-        const { pathname } = url.parse(uri)
-        const filename = path.resolve(__dirname, 'examples/simple', '.' + pathname)
+        const filename = path.resolve(__dirname, 'examples/simple', '.' + uri.pathname)
         return await fs.readFile(filename, { encoding: 'utf8' })
       }
     }
   }
 
   async get(reference) {
-    const uri = referenceResource(reference)
+    const uri = url.parse(reference)
+    const key = uri.href
+      .replace(uri.hash, '')
     
-    if (!this.resources[uri]) {
+    if (!this.resources[key]) {
 
-      const { protocol, pathname } = url.parse(uri)
-      if (!this.protocols[protocol]) {
-        throw new Error('Unknown protocol ' + protocol)
+      if (!this.protocols[uri.protocol]) {
+        throw new Error('Unknown protocol ' + uri.protocol)
       }
 
-      const rawContents = await this.protocols[protocol](uri)
+      const rawContents = await this.protocols[uri.protocol](uri)
   
-      const extension = path.extname(pathname)
+      const extension = path.extname(uri.pathname)
       
       if (!this.parsers[extension]) {
         throw new Error('Unknown extension ' + extension)
@@ -119,15 +119,14 @@ class ResourceEngine {
 
       const contents = this.parsers[extension](rawContents)
   
-      this.resources[uri] = new ResourceWrapper(this, contents, uri)
+      this.resources[key] = new ResourceWrapper(this, contents, uri)
     }
 
-    const node = await this.resources[uri].get()
-    const { hash } = url.parse(reference)
-    if (hash == null) {
+    const node = await this.resources[key].get()
+    if (uri.hash == null) {
       return node
     } else {
-      return jsonpointer.get(node, hash.slice(1))
+      return jsonpointer.get(node, uri.hash.slice(1))
     }
   }
 }
