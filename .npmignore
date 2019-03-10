@@ -1,0 +1,5 @@
+.npmignore
+.gitignore
+examples
+src/test-setup.js
+src/**/*.spec.js
