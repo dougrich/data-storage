@@ -1,0 +1,4 @@
+name:
+  $ref: res:///def.toml#/details/name
+surname:
+  $ref: res:///xyz.json5#/name
