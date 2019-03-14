@@ -1,6 +1,6 @@
 {
   "name": "@dougrich/data-storage",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "Efficient linked data storage",
   "main": "./src/index.js",
   "directories": {
