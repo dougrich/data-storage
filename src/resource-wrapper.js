@@ -5,7 +5,21 @@ async function evaluateNode (engine, node, root) {
     if (Array.isArray(node)) {
       return Promise.all(node.map(n => evaluateNode(engine, n, root)))
     } else if (node[REF_PROPERTY] != null) {
-      const referencedValue = await engine.get(node[REF_PROPERTY], root)
+      const ref = node[REF_PROPERTY]
+      let referencedValue
+      if (Array.isArray(ref)) {
+        const results = await Promise.all(ref.map(ref => engine.get(ref, root)))
+        referencedValue = []
+        for (const result of results) {
+          if (Array.isArray(result)) {
+            referencedValue.push(...result)
+          } else {
+            referencedValue.push(result)
+          }
+        }
+      } else {
+        referencedValue = await engine.get(ref, root)
+      }
       return evaluateNode(engine, referencedValue, root)
     } else {
       const fieldValues = await Promise.all(Object.keys(node).map(async field => {

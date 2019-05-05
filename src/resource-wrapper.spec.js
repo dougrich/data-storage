@@ -71,5 +71,75 @@ describe('ResourceWrapper', () => {
       expect(engine.get).to.have.been.calledWith('#/abc', node)
       expect(engine.get).to.have.been.calledWith('#/xyz', node)
     })
+
+    it('resolves arrays', async () => {
+      const engine = {
+        get: sinon.stub().callsFake((ref, node) => {
+          return node[ref.slice(2)]
+        })
+      }
+      const node = {
+        'abc': [1, 2],
+        'def': { '$ref': '#/abc' }
+      }
+      const wrapper = new ResourceWrapper(engine, node, '')
+      expect(await wrapper.get()).to.eql({
+        'abc': [1, 2],
+        'def': [1, 2]
+      })
+    })
+
+    it('resolves array of references', async () => {
+      const engine = {
+        get: sinon.stub().callsFake((ref, node) => {
+          return node[ref.slice(2)]
+        })
+      }
+      const node = {
+        'abc': [1, 2],
+        'def': [{ '$ref': '#/abc' }, { '$ref': '#/abc'}]
+      }
+      const wrapper = new ResourceWrapper(engine, node, '')
+      expect(await wrapper.get()).to.eql({
+        'abc': [1, 2],
+        'def': [[1, 2], [1,2]]
+      })
+    })
+
+    it('resolves array of references', async () => {
+      const engine = {
+        get: sinon.stub().callsFake((ref, node) => {
+          return node[ref.slice(2)]
+        })
+      }
+      const node = {
+        'abc': [1, 2],
+        'def': { '$ref': ['#/abc', '#/abc'] }
+      }
+      const wrapper = new ResourceWrapper(engine, node, '')
+      expect(await wrapper.get()).to.eql({
+        'abc': [1, 2],
+        'def': [1, 2, 1, 2]
+      })
+    })
+
+    it('resolves array of references in mixed', async () => {
+      const engine = {
+        get: sinon.stub().callsFake((ref, node) => {
+          return node[ref.slice(2)]
+        })
+      }
+      const node = {
+        'abc': [1, 2],
+        'xyz': 4,
+        'def': { '$ref': ['#/abc', '#/xyz'] }
+      }
+      const wrapper = new ResourceWrapper(engine, node, '')
+      expect(await wrapper.get()).to.eql({
+        'abc': [1, 2],
+        'xyz': 4,
+        'def': [1, 2, 4]
+      })
+    })
   })
 })
