@@ -1,0 +1,13 @@
+arraystart:
+- 0
+- 1
+- 2
+arrayend:
+- 3
+- 4
+- 5
+flatarray: # this is a flattened array
+  $ref: ["#/arraystart", "#/arrayend"]
+arrayarray: # this is an array of arrays
+- $ref: "#/arraystart"
+- $ref: "#/arrayend"

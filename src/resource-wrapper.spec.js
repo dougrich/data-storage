@@ -97,12 +97,12 @@ describe('ResourceWrapper', () => {
       }
       const node = {
         'abc': [1, 2],
-        'def': [{ '$ref': '#/abc' }, { '$ref': '#/abc'}]
+        'def': [{ '$ref': '#/abc' }, { '$ref': '#/abc' }]
       }
       const wrapper = new ResourceWrapper(engine, node, '')
       expect(await wrapper.get()).to.eql({
         'abc': [1, 2],
-        'def': [[1, 2], [1,2]]
+        'def': [[1, 2], [1, 2]]
       })
     })
 

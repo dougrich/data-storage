@@ -1,0 +1,4 @@
+# 0.2.0
+- added FileEngine syntactic sugar for most common scenario
+- fleshed out README
+- fixed handling of self-references

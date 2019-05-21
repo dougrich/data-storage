@@ -6,6 +6,10 @@ const ResourceEngine = require('./resource-engine')
 
 describe('ResourceEngine', () => {
   describe('#get', () => {
+    it('returns self reference', async () => {
+      const engine = new ResourceEngine({}, {})
+      expect(await engine.get('#/def', { def: '1234' })).to.equal('1234')
+    })
     it('returns a cached node', async () => {
       const engine = new ResourceEngine({}, {})
       const node = {}

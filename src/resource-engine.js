@@ -16,7 +16,11 @@ class ResourceEngine {
     this.key = key
   }
 
-  async get (reference) {
+  async get (reference, root) {
+    if (reference[0] === '#') {
+      // specialcase: this is a root node
+      return this.jsonpointer.get(root, reference.slice(1))
+    }
     const uri = new URL(reference)
     const key = this.key(uri)
 
